@@ -7,9 +7,6 @@ const useCreateUser = () => {
         mutationKey: ['create-user'],
         mutationFn: async (data) => {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users`, data);
-
-            console.log(response);
-
             return response.data;
         }
     })

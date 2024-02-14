@@ -1,20 +1,15 @@
-import useUserId from "@/hooks/use-user-id";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import {useRouter} from "next/router";
+import {AppContext} from "@/app.context";
 
 const useRouteGuard = () => {
-    const userId = useUserId();
-    const { push } = useRouter();
+    const {state: {userId}} = useContext(AppContext);
+    const {push} = useRouter();
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            if (userId) return;
-            void push('/');
-        }, 0);
+        if (userId) return;
 
-        return () => {
-            clearTimeout(timeoutId);
-        }
+        void push('/');
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId]);

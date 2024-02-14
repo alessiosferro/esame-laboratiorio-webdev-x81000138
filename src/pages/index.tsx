@@ -5,11 +5,10 @@ import {Controller, FormProvider, useForm, useWatch} from "react-hook-form";
 import LoginUserModel from "@/model/login-user.model";
 import useGetUserByEmail from "@/hooks/use-get-user-by-email";
 import useRedirectEffect from "@/hooks/use-redirect-effect";
-import useUserId from "@/hooks/use-user-id";
 import useIsClientLoaded from "@/hooks/use-is-client-loaded";
+import {socket} from "@/pages/_app";
 import {useContext} from "react";
 import {AppContext} from "@/app.context";
-import {socket} from "@/pages/_app";
 
 export default function Home() {
     const isClientLoaded = useIsClientLoaded();
@@ -20,26 +19,20 @@ export default function Home() {
         }
     });
 
-    const {dispatch} = useContext(AppContext);
-
     const email = useWatch({control: form.control, name: 'email'});
 
     const {refetch: getUserByEmail} = useGetUserByEmail(email);
 
-    const userId = useUserId();
+    const {state: {userId}} = useContext(AppContext);
 
     const submitHandler = async () => {
         const {data: user} = await getUserByEmail();
 
         if (!user) return;
 
-        const {id} = user;
+        socket.emit('login', {socketId: socket.id, id: user.id});
 
-        window.sessionStorage.setItem('logged-user-id', id);
-
-        dispatch({userId: id});
-
-        socket.connect();
+        sessionStorage.setItem('logged-user-id', user.id);
     }
 
     useRedirectEffect();
@@ -55,10 +48,10 @@ export default function Home() {
                 <Heading variant="h2">Login</Heading>
 
                 <Flex as="form" direction="column" gap="1rem" onSubmit={form.handleSubmit(submitHandler)}>
-                    <Controller name="email" render={({field: {onChange}}) => (
+                    <Controller rules={{required: true}} name="email" render={({field: {onChange}}) => (
                         <FormControl>
                             <FormLabel>E-Mail</FormLabel>
-                            <Input onChange={onChange}/>
+                            <Input type="email" onChange={onChange}/>
                         </FormControl>
                     )}/>
 

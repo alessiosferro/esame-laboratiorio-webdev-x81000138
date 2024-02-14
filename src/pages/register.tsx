@@ -7,7 +7,8 @@ import RegisterUserModel from "@/model/register-user.model";
 import {useRouter} from "next/router";
 import useIsClientLoaded from "@/hooks/use-is-client-loaded";
 import useRedirectEffect from "@/hooks/use-redirect-effect";
-import useUserId from "@/hooks/use-user-id";
+import {useContext} from "react";
+import {AppContext} from "@/app.context";
 
 const formDefaultValues = {
     nome: "",
@@ -28,7 +29,7 @@ const RegisterPage = () => {
 
     const isClientLoaded = useIsClientLoaded();
 
-    const userId = useUserId();
+    const {state: {userId}} = useContext(AppContext);
 
     useRedirectEffect();
 

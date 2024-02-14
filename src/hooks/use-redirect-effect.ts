@@ -1,22 +1,16 @@
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import {useRouter} from "next/router";
-import useUserId from "@/hooks/use-user-id";
+import {AppContext} from "@/app.context";
 
 const useRedirectEffect = () => {
-    const { push } = useRouter();
+    const {push} = useRouter();
 
-    const userId = useUserId();
+    const {state: {userId}} = useContext(AppContext);
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            if (!userId) return;
+        if (!userId) return;
 
-            void push('/dashboard');
-        }, 0);
-
-        return () => {
-            clearTimeout(timeoutId)
-        };
+        void push('/dashboard');
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId]);

@@ -1,15 +1,14 @@
 import {Button, Flex, FormControl, FormLabel, Heading, VisuallyHidden} from "@chakra-ui/react";
 import {Controller, FormProvider, SubmitHandler, useForm} from "react-hook-form";
 import {Input} from "@chakra-ui/input";
-import {socket} from "@/pages/_app";
 
 interface SendMessageFormProps {
-    userId: string;
+    onSubmit: (message: string) => void;
 }
 
 const SendMessageForm = (props: SendMessageFormProps) => {
     const {
-        userId
+        onSubmit,
     } = props;
 
     const form = useForm({
@@ -18,9 +17,9 @@ const SendMessageForm = (props: SendMessageFormProps) => {
         }
     });
 
-    const sendMessageHandler: SubmitHandler<{ message: string }> = ({message}) => {
-        socket.emit('message', {userId, message});
-        form.setValue("message", "");
+    const submitHandler: SubmitHandler<{ message: string }> = ({message}) => {
+        form.reset();
+        onSubmit(message);
     }
 
     return (
@@ -28,7 +27,8 @@ const SendMessageForm = (props: SendMessageFormProps) => {
             <section>
                 <Heading mb="1rem" variant="h2">Cosa stai pensando?</Heading>
 
-                <Flex as="form" align="flex-end" gap=".5rem" onSubmit={form.handleSubmit(sendMessageHandler)}>
+                <Flex as="form" align="flex-end" gap=".5rem"
+                      onSubmit={form.handleSubmit(submitHandler)}>
                     <Controller name="message" render={({field: {onChange, value}}) => (
                         <FormControl flex={1}>
                             <VisuallyHidden>

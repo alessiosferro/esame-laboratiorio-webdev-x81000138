@@ -2,42 +2,36 @@ import {Button, Heading, Link as ChakraLink, List, ListItem, Text} from "@chakra
 import Link from "next/link";
 import {socket} from "@/pages/_app";
 import {useMemo} from "react";
-import useGetUsers from "@/hooks/use-get-users";
+import RoomModel from "@/model/room.model";
 
 interface DashboardRoomsProps {
-    rooms: string[];
-    userId: string;
+    rooms: Record<number, RoomModel>;
 }
 
 const DashboardRooms = (props: DashboardRoomsProps) => {
     const {
-        userId,
         rooms
     } = props;
 
-    const {data: dbUsers} = useGetUsers();
-
-    const currentUser = useMemo(() => {
-        return dbUsers?.find(user => user.id === userId) || null;
-    }, [userId, dbUsers]);
+    const roomEntries = useMemo(() => Object.entries(rooms), [rooms]);
 
     const addRoomHandler = () => {
-        socket.emit('addRoom', `Stanza di ${currentUser?.nome} ${currentUser?.cognome}`);
+        socket.emit('addRoom');
     }
 
     return (
         <section>
             <Heading variant="h2">Stanze di gioco</Heading>
 
-            {!rooms.length ? (
+            {!roomEntries?.length ? (
                 <Text mt=".5rem">Al momento non è ancora stata creata alcuna stanza.</Text>
             ) : (
                 <List mt=".5rem">
-                    {rooms.map((room, index) => (
+                    {roomEntries.filter(([, {usersConnected}]) => usersConnected < 2).map(([roomName, {usersConnected}], index) => (
                         <ListItem key={index}>
-                            <Link href={`/rooms/${room}`} passHref legacyBehavior>
+                            <Link href={`/rooms/${roomName}`} passHref legacyBehavior>
                                 <ChakraLink>
-                                    Unisciti alla stanza {room}
+                                    Unisciti alla stanza {roomName} ({usersConnected}/2)
                                 </ChakraLink>
                             </Link>
                         </ListItem>
@@ -45,7 +39,7 @@ const DashboardRooms = (props: DashboardRoomsProps) => {
                 </List>
             )}
 
-            <Button mt="1rem" alignSelf="flex-start" onClick={addRoomHandler}>Crea nuova stanza di gioco</Button>
+            <Button mt="1rem" alignSelf="flex-start" onClick={addRoomHandler}>Crea nuova stanza</Button>
         </section>
     )
 }
