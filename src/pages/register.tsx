@@ -1,6 +1,6 @@
-import {Button, Flex, FormControl, Link as ChakraLink, FormLabel, Heading, useToast} from "@chakra-ui/react";
+import {Button, Flex, FormControl, FormLabel, Heading, Link as ChakraLink, useToast} from "@chakra-ui/react";
 import {Input} from "@chakra-ui/input";
-import {Controller, FormProvider, SubmitHandler, useForm, useWatch} from "react-hook-form";
+import {Controller, FormProvider, SubmitHandler, useForm} from "react-hook-form";
 import Link from "next/link";
 import useCreateUser from "@/hooks/use-create-user";
 import RegisterUserModel from "@/model/register-user.model";
@@ -22,9 +22,9 @@ const RegisterPage = () => {
 
     const toast = useToast();
 
-    const { mutateAsync: createUser } = useCreateUser();
+    const {mutateAsync: createUser} = useCreateUser();
 
-    const { push } = useRouter();
+    const {push} = useRouter();
 
     const isClientLoaded = useIsClientLoaded();
 
@@ -59,7 +59,8 @@ const RegisterPage = () => {
 
     return (
         <FormProvider {...form}>
-            <Flex onSubmit={form.handleSubmit(submitHandler)} direction="column" px="5rem" flex={1} gap="1rem" as="form">
+            <Flex onSubmit={form.handleSubmit(submitHandler)} direction="column" px="5rem" flex={1} gap="1rem"
+                  as="form">
                 <Heading as="h2" variant="h2">
                     Form di registrazione
                 </Heading>
@@ -68,26 +69,26 @@ const RegisterPage = () => {
                     <ChakraLink>Torna indietro</ChakraLink>
                 </Link>
 
-                <Controller name="nome" render={({ field: { onChange }}) => (
+                <Controller name="nome" render={({field: {value, onChange}}) => (
                     <FormControl>
                         <FormLabel>Nome</FormLabel>
-                        <Input onChange={onChange} required/>
+                        <Input value={value} onChange={onChange} required/>
                     </FormControl>
-                )} />
+                )}/>
 
-                <Controller name="cognome" render={({ field: { onChange }}) => (
+                <Controller name="cognome" render={({field: {value, onChange}}) => (
                     <FormControl>
                         <FormLabel>Cognome</FormLabel>
-                        <Input onChange={onChange}  required/>
+                        <Input value={value} onChange={onChange} required/>
                     </FormControl>
-                )} />
+                )}/>
 
-                <Controller name="email" render={({ field: { onChange }}) => (
+                <Controller name="email" render={({field: {value, onChange}}) => (
                     <FormControl>
                         <FormLabel>Email</FormLabel>
-                        <Input onChange={onChange} required type="email"/>
+                        <Input value={value} onChange={onChange} required type="email"/>
                     </FormControl>
-                )} />
+                )}/>
 
                 <Button type="submit">Registrati</Button>
             </Flex>

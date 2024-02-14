@@ -9,6 +9,7 @@ import useUserId from "@/hooks/use-user-id";
 import useIsClientLoaded from "@/hooks/use-is-client-loaded";
 import {useContext} from "react";
 import {AppContext} from "@/app.context";
+import {socket} from "@/pages/_app";
 
 export default function Home() {
     const isClientLoaded = useIsClientLoaded();
@@ -37,6 +38,8 @@ export default function Home() {
         window.sessionStorage.setItem('logged-user-id', id);
 
         dispatch({userId: id});
+
+        socket.connect();
     }
 
     useRedirectEffect();
@@ -46,8 +49,8 @@ export default function Home() {
     return (
         <FormProvider {...form}>
             <Flex gap="2rem"
+                  mx="2rem"
                   direction="column"
-                  px="5rem"
                   as="main"
                   flex={1}>
                 <Flex as="form" direction="column" gap="1rem" onSubmit={form.handleSubmit(submitHandler)}>

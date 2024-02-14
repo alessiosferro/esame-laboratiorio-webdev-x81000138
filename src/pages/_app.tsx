@@ -1,11 +1,13 @@
 import type {AppProps} from "next/app";
-import {Box, Button, ChakraProvider, defineStyleConfig, extendTheme, Flex, Heading} from "@chakra-ui/react";
+import {Box, ChakraProvider, defineStyleConfig, extendTheme, Flex, Heading} from "@chakra-ui/react";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import useUserId from "@/hooks/use-user-id";
-import {useRouter} from "next/router";
 import AppContextProvider from "@/app.context";
+import LogoutButton from "@/components/LogoutButton";
+import io from "socket.io-client";
 
 const queryClient = new QueryClient();
+
+export const socket = io("ws://localhost:3001");
 
 const theme = extendTheme({
     components: {
@@ -26,14 +28,7 @@ const theme = extendTheme({
 
 
 export default function App({Component, pageProps}: AppProps) {
-    const userId = useUserId();
 
-    const {push} = useRouter();
-
-    const logoutHandler = () => {
-        sessionStorage.removeItem('logged-user-id');
-        push('/');
-    }
 
     return (
         <QueryClientProvider client={queryClient}>
@@ -42,7 +37,7 @@ export default function App({Component, pageProps}: AppProps) {
                     <Flex minHeight="100dvh" direction="column">
                         <Box mb="2rem" py="2rem" backgroundColor="gray.100" as="header" textAlign="center">
                             <Heading as="h1">Morra Cinese</Heading>
-                            {userId && <Button onClick={logoutHandler}>Logout</Button>}
+                            <LogoutButton/>
                         </Box>
                         <Component {...pageProps} />
                     </Flex>
