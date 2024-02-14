@@ -1,13 +1,14 @@
 import Link from "next/link";
 import {Input} from "@chakra-ui/input";
-import {Button, Flex, Link as ChakraLink, FormControl, FormLabel} from "@chakra-ui/react";
+import {Button, Flex, FormControl, FormLabel, Link as ChakraLink} from "@chakra-ui/react";
 import {Controller, FormProvider, useForm, useWatch} from "react-hook-form";
 import LoginUserModel from "@/model/login-user.model";
 import useGetUserByEmail from "@/hooks/use-get-user-by-email";
 import useRedirectEffect from "@/hooks/use-redirect-effect";
 import useUserId from "@/hooks/use-user-id";
 import useIsClientLoaded from "@/hooks/use-is-client-loaded";
-import {useRouter} from "next/router";
+import {useContext} from "react";
+import {AppContext} from "@/app.context";
 
 export default function Home() {
     const isClientLoaded = useIsClientLoaded();
@@ -18,13 +19,13 @@ export default function Home() {
         }
     });
 
+    const {dispatch} = useContext(AppContext);
+
     const email = useWatch({control: form.control, name: 'email'});
 
     const {refetch: getUserByEmail} = useGetUserByEmail(email);
 
     const userId = useUserId();
-
-    const { push } = useRouter();
 
     const submitHandler = async () => {
         const {data: user} = await getUserByEmail();
@@ -35,7 +36,7 @@ export default function Home() {
 
         window.sessionStorage.setItem('logged-user-id', id);
 
-        void push('/dashboard');
+        dispatch({userId: id});
     }
 
     useRedirectEffect();

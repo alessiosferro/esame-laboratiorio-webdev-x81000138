@@ -10,6 +10,7 @@ const DashboardPage = () => {
 
     const userId = useUserId();
 
+
     if (!isClientLoaded || !userId) {
         return null;
     }
@@ -17,7 +18,10 @@ const DashboardPage = () => {
     return (
         <>
             <Flex direction="column" mx="2rem">
+
                 <Heading variant="h2">Dashboard</Heading>
+
+
             </Flex>
         </>
     )

@@ -1,14 +1,19 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
+import {AppContext} from "@/app.context";
 
 const useUserId = () => {
-    const [userId, setUserId] = useState<string>("");
+    const {state: {userId}, dispatch} = useContext(AppContext);
 
     useEffect(() => {
-        const userId = window.sessionStorage.getItem('logged-user-id');
+        const id = window.sessionStorage.getItem('logged-user-id');
 
-        if (!userId) return;
+        if (!id) return;
 
-        setUserId(userId);
+        dispatch({
+            userId: id
+        });
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return userId;
