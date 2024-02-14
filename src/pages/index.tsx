@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {Input} from "@chakra-ui/input";
-import {Button, Flex, FormControl, FormLabel, Link as ChakraLink} from "@chakra-ui/react";
+import {Button, Flex, FormControl, FormLabel, Heading, Link as ChakraLink} from "@chakra-ui/react";
 import {Controller, FormProvider, useForm, useWatch} from "react-hook-form";
 import LoginUserModel from "@/model/login-user.model";
 import useGetUserByEmail from "@/hooks/use-get-user-by-email";
@@ -49,10 +49,11 @@ export default function Home() {
     return (
         <FormProvider {...form}>
             <Flex gap="2rem"
-                  mx="2rem"
                   direction="column"
-                  as="main"
+                  as="section"
                   flex={1}>
+                <Heading variant="h2">Login</Heading>
+
                 <Flex as="form" direction="column" gap="1rem" onSubmit={form.handleSubmit(submitHandler)}>
                     <Controller name="email" render={({field: {onChange}}) => (
                         <FormControl>

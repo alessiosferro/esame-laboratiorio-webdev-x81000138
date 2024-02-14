@@ -59,7 +59,10 @@ const RegisterPage = () => {
 
     return (
         <FormProvider {...form}>
-            <Flex onSubmit={form.handleSubmit(submitHandler)} direction="column" px="5rem" flex={1} gap="1rem"
+            <Flex onSubmit={form.handleSubmit(submitHandler)}
+                  direction="column"
+                  flex={1}
+                  gap="1rem"
                   as="form">
                 <Heading as="h2" variant="h2">
                     Form di registrazione
@@ -90,7 +93,7 @@ const RegisterPage = () => {
                     </FormControl>
                 )}/>
 
-                <Button type="submit">Registrati</Button>
+                <Button mt="1rem" type="submit">Registrati</Button>
             </Flex>
         </FormProvider>
     );

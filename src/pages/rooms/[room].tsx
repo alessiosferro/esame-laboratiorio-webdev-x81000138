@@ -14,7 +14,7 @@ const RoomNumberPage = () => {
     }, []);
 
     return (
-        <Flex mx="2rem" gap="2rem" direction="column">
+        <Flex gap="2rem" direction="column">
             <Heading variant="h2">Stanza di gioco {query.room}</Heading>
 
             <Link href="/dashboard" passHref legacyBehavior>

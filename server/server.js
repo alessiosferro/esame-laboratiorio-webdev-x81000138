@@ -56,8 +56,8 @@ io.on('connection', (socket) => {
         socket.emit('rooms', rooms);
     });
 
-    socket.on('addRoom', () => {
-        rooms.push(`room-${roomNumber++}`);
+    socket.on('addRoom', (roomName) => {
+        rooms.push(roomName);
 
         io.sockets.emit('rooms', rooms);
     });
